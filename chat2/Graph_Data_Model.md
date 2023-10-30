@@ -1,7 +1,9 @@
 # 第二章 - Graph Data Model
 
 ## Graph Data Model
-圖模型是一種資料模型，其中資訊被表示為節點（Nodes）和邊（Edges）。在圖資料模型中，節點通常代表實體（例如人、物件、事件），而邊代表節點之間的關係或交互。
+圖模型是一種資料模型，其中資訊被表示為節點（Nodes）和邊（Edges）。
+
+在圖資料模型中，節點通常代表實體（例如人、物件、事件），而邊代表節點之間的關係或交互。
 
 圖資料模型的主要特點如下：
 
@@ -20,8 +22,70 @@
 - 知識圖譜：表示各種事物及其之間的關聯。
 - 網絡拓撲和路由：表示網絡中的節點和連接。
 
-對於圖資料模型的查詢和分析，有專門的圖資料庫（如 Neo4j、ArangoDB 等）和查詢語言（如 Cypher、Gremlin 等）來支援。
+對於圖資料模型的查詢和分析，有專門的圖資料庫（如 Neo4j、ArangoDB 等）和查詢語言（如 Cypher、Gremlin 等）支援。
 
+目前已知使用的公司：
+- Airbnb：用於偵測和預防欺詐。
+- eBay：用於提供購物搜索和個性化體驗。
+- Walmart：用於商品推薦和搜索。
+- LinkedIn：用於其社交網絡的連接和推薦。
+- NASA：用於組織和查詢其大量的技術文檔和數據。
+
+他們使用的原因：
+
+- 複雜關係：圖數據庫非常適合表示和查詢複雜的多對多關係。
+- 靈活性：圖數據庫可以容易地添加或修改屬性和關係，而不需要大規模的模式更改。
+- 直觀的查詢語言：它允許開發者用自然的方式表示和查詢數據。
+- 實時推薦和分析：圖數據庫可以快速地執行深度遍歷，這使得它們非常適合實時推薦和分析。
+- 欺詐檢測：通過分析數據中的模式和關係，圖數據庫可以幫助檢測異常和可能的欺詐活動。
 
 ## Cypher 查詢語言
+Cypher 是屬性圖的宣告式查詢語言，為 Neo4j 圖形資料庫而發明。
 
+以下是Cypher的使用案例:
+
+假設我們有一個簡單的社交網絡，其中包含用戶和他們的朋友關係。
+
+節點 (Nodes):
+
+- Alice
+- Bob
+- Charlie
+
+關係 (Relationships):
+
+- Alice 是 Bob 的朋友
+- Bob 是 Charlie 的朋友
+
+在圖形資料模型中，這些用戶會被表示為節點，而朋友關係會被表示為連接這些節點的邊。
+
+查找所有用戶
+``` cypher
+MATCH (n:User)
+RETURN n
+```
+查找Alcie所有朋友
+```
+MATCH (alice:User {name: 'Alice'})-[:FRIEND]->(friends)
+RETURN friends
+```
+查看Alcie和Bob是否有朋友關係
+```
+MATCH (alice:User {name: 'Alice'})-[:FRIEND]->(bob:User {name: 'Bob'})
+RETURN bob
+```
+新增一個用戶Dan
+```
+CREATE (dan:User {name: 'Dan'})
+```
+設定Dan和Alcie成為朋友
+```
+MATCH (dan:User {name: 'Dan'}), (alice:User {name: 'Alice'})
+CREATE (dan)-[:FRIEND]->(alice)
+```
+
+註:當然也可以在 SQL 中模擬圖形數據模型。
+
+但當需要進行複雜的圖形查詢（例如查找最短路徑、進行深度遍歷等）時
+
+專用的圖形數據庫和查詢語言（如 Neo4j 和 Cypher）可能會更加高效和直觀。
